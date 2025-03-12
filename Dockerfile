@@ -4,9 +4,9 @@ RUN apt update
 RUN sleep 60
 RUN apt install apache2 -y
 RUN apt install apache2-utils -y
-RUN sleep 60
+RUN sleep 30
 RUN apt clean 
-RUN apt unzip
+RUN apt install unzip
 EXPOSE 80
 #RUN  apt-get install apache2 \
  #zip\
