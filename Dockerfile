@@ -1,7 +1,7 @@
 FROM  ubuntu:latest
 MAINTAINER hemanthdev22@gmail.com
 RUN apt update 
-RUN apt install –y apache2 
+RUN apt install apache2
 RUN apt install –y apache2-utils 
 RUN apt clean 
 RUN apt unzip
