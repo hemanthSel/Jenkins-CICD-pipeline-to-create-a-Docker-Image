@@ -1,4 +1,4 @@
-FROM  Ubuntu:latest
+FROM  ubuntu:latest
 MAINTAINER hemanthdev22@gmail.com
 RUN apt install apache2 \
  zip\
