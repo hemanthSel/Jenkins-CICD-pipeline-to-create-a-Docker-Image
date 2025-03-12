@@ -4,10 +4,11 @@ RUN apt update
 RUN apt install –y apache2 
 RUN apt install –y apache2-utils 
 RUN apt clean 
+RUN apt unzip
 EXPOSE 80
 #RUN  apt-get install apache2 \
- zip\
- unzip
+ #zip\
+ #unzip
 ADD https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip /var/www/html/
 WORKDIR /var/www/html/
 RUN unzip neogym.zip
