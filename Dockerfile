@@ -14,7 +14,7 @@ EXPOSE 80
 ADD https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip /var/www/html/
 WORKDIR /var/www/html/
 RUN unzip neogym.zip
-RUN mv * /var/www/html/
+#RUN mv * /var/www/html/
 RUN ls -ltr  /var/www/html/
 #RUN cp -rvf neogym/* .
 #RUN rm -rf neogym neogym.zip
