@@ -3,7 +3,8 @@ MAINTAINER hemanthdev22@gmail.com
 RUN apt update 
 RUN sleep 60
 RUN apt install apache2 -y
-RUN apt install –y apache2-utils 
+RUN apt install apache2-utils -y
+RUN sleep 60
 RUN apt clean 
 RUN apt unzip
 EXPOSE 80
