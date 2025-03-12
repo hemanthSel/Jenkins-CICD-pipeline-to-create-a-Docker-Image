@@ -1,14 +1,14 @@
-FROM  centos:latest
-MAINTAINER vikashashoke@gmail.com
-RUN yum install -y httpd \
+FROM  Ubuntu:latest
+MAINTAINER hemanthdev22@gmail.com
+RUN apt install apache2 \
  zip\
  unzip
-ADD https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip /var/www/html/
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip /var/www/html/
 WORKDIR /var/www/html/
-RUN unzip photogenic.zip
-RUN cp -rvf photogenic/* .
-RUN rm -rf photogenic photogenic.zip
-CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+RUN unzip neogym.zip
+RUN cp -rvf neogym/* .
+RUN rm -rf neogym neogym.zip
+CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
 EXPOSE 80
  
  
