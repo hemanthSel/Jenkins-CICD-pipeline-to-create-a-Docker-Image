@@ -12,9 +12,9 @@ RUN apt-get update && \
 WORKDIR /var/www/html/
 RUN wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip && \
     unzip neogym.zip && \
-   // ls -ltr && \
-  //  pwd && \
-  //  cp -r neogym/* /var/www/html/
+   # ls -ltr && \
+  #  pwd && \
+  #  cp -r neogym/* /var/www/html/
 
 
 # Expose port 80 for Apache
