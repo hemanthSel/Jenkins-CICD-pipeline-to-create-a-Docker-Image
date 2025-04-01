@@ -4,7 +4,7 @@ MAINTAINER hemanthdev22@gmail.com
 # Update package lists and install necessary packages
 RUN apt-get update && \
     apt-get install -y apache2 && \
-    apache2-utils && \
+    apt-get install apache2-utils && \
     unzip \
 
 # Download and unzip the website files
