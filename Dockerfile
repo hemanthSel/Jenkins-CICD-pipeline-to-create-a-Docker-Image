@@ -1,36 +1,35 @@
 FROM  ubuntu:latest
 MAINTAINER hemanthdev22@gmail.com
-RUN apt update 
-RUN sleep 60
-RUN apt install apache2 -y
-RUN apt install apache2-utils -y
-RUN sleep 30
-RUN apt clean 
-RUN apt install unzip
+
+# Update package lists and install necessary packages
+RUN apt-get update && \
+    apt-get install -y apache2 && \
+    apache2-utils && \
+    unzip \
+
+# Download and unzip the website files
+WORKDIR /var/www/html/
+RUN wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip && \
+    unzip neogym.zip && \
+    cp -r neogym/* /var/www/html/
+
+
+# Expose port 80 for Apache
 EXPOSE 80
+
+
 #RUN  apt-get install apache2 \
  #zip\
  #unzip
-ADD https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip /var/www/html/
-WORKDIR /var/www/html/
-RUN unzip neogym.zip
-#RUN mv * /var/www/html/
-RUN ls -ltr  /var/www/html/
+# ADD https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip /var/www/html/
+# WORKDIR /var/www/html/
+# RUN unzip neogym.zip
+# #RUN mv * /var/www/html/
+# RUN ls -ltr  /var/www/html/
+# CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
+# EXPOSE 80
+
 #RUN cp -rvf neogym/* .
 #RUN rm -rf neogym neogym.zip
-CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
-EXPOSE 80
+
  
- 
-# FROM  centos:latest
-# MAINTAINER vikashashoke@gmail.com
-# RUN yum install -y httpd \
-#  zip\
-#  unzip
-# ADD https://www.free-css.com/assets/files/free-css-templates/download/page265/shine.zip /var/www/html/
-# WORKDIR /var/www/html/
-# RUN unzip shine.zip
-# RUN cp -rvf shine/* .
-# RUN rm -rf shine shine.zip
-# CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
-# EXPOSE 80   
