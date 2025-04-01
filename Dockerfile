@@ -5,7 +5,7 @@ MAINTAINER hemanthdev22@gmail.com
 RUN apt-get update && \
     apt-get install -y apache2 && \
     apt-get install apache2-utils && \
-    unzip \
+    apt-get unzip \
 
 # Download and unzip the website files
 WORKDIR /var/www/html/
