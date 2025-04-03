@@ -1,16 +1,18 @@
-FROM  ubuntu:latest
+FROM  httpd:latest #ubuntu:latest
 MAINTAINER hemanthdev22@gmail.com
 
 # Update package lists and install necessary packages
-RUN apt-get update && \
-    apt-get install -y apache2 && \
-    apt-get install -y apache2-utils && \
-    apt-get install -y unzip && \
-    apt-get install wget
+# RUN apt-get update && \
+#     apt-get install -y apache2 && \
+#     apt-get install -y apache2-utils && \
+#     apt-get install -y unzip && \
+#     apt-get install wget
 
 # Download and unzip the website files
 WORKDIR /var/www/html/
-RUN wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip 
+RUN
+docker image build -t $JOB_NAME:v1.$BUILD_ID .
+ #wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip 
    # unzip neogym.zip && \
    # ls -ltr && \
   #  pwd && \
