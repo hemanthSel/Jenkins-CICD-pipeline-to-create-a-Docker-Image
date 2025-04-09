@@ -12,7 +12,7 @@ MAINTAINER hemanthdev22@gmail.com
 # Download and unzip the website files
 WORKDIR /var/www/html/
 RUN
-docker image build -t $JOB_NAME:v1.$BUILD_ID .
+# docker image build -t $JOB_NAME:v1.$BUILD_ID .
  #wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip 
    # unzip neogym.zip && \
    # ls -ltr && \
