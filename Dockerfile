@@ -1,4 +1,4 @@
-FROM httpd:latest #ubuntu:latest
+FROM httpd:latest 
 MAINTAINER hemanthdev22@gmail.com
 
 # Update package lists and install necessary packages
@@ -7,6 +7,7 @@ MAINTAINER hemanthdev22@gmail.com
 #     apt-get install -y apache2-utils && \
 #     apt-get install -y unzip && \
 #     apt-get install wget
+#   ubuntu:latest
 
 # Download and unzip the website files
 WORKDIR /var/www/html/
