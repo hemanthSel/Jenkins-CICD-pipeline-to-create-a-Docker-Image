@@ -1,4 +1,4 @@
-FROM  httpd:latest #ubuntu:latest
+FROM httpd:latest #ubuntu:latest
 MAINTAINER hemanthdev22@gmail.com
 
 # Update package lists and install necessary packages
