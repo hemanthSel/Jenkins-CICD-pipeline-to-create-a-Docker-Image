@@ -1,6 +1,9 @@
 FROM httpd:latest 
 MAINTAINER hemanthdev22@gmail.com
 
+# Set an environment variable for the new document root
+ENV APACHE_DOCUMENT_ROOT=/var/www/html
+
 # Update package lists and install necessary packages
 # RUN apt-get update && \
 #     apt-get install -y apache2 && \
