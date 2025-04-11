@@ -1,45 +1,46 @@
-FROM httpd:latest 
+FROM ubuntu:latest
 MAINTAINER hemanthdev22@gmail.com
 
-# Set an environment variable for the new document root
-ENV APACHE_DOCUMENT_ROOT=/var/www/html
+# Update package lists
+RUN apt-get update
 
-# Update package lists and install necessary packages
-# RUN apt-get update && \
-#     apt-get install -y apache2 && \
-#     apt-get install -y apache2-utils && \
-#     apt-get install -y unzip && \
-#     apt-get install wget
-#   ubuntu:latest
+# Install Java 17
+RUN apt-get install -y openjdk-17-jdk
 
-# Download and unzip the website files
-WORKDIR /var/www/html/
-COPY  neogym-html/* /usr/local/apache2/htdocs/
-RUN
-# docker image build -t $JOB_NAME:v1.$BUILD_ID .
- #wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip 
-   # unzip neogym.zip && \
-   # ls -ltr && \
-  #  pwd && \
-  #  cp -r neogym/* /var/www/html/
+# Install Apache2 and utilities
+RUN apt-get install -y apache2 apache2-utils
+
+# Install unzip and wget
+RUN apt-get install -y unzip wget
+
+# Download Neogym template
+RUN wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip
+
+# Unzip the template
+RUN unzip -u neogym.zip
+
+# Copy website files to Apache document root
+RUN cp -r neogym-html/* /var/www/html/
+
+# Remove the zip file
+RUN rm neogym.zip
+
+# Set Apache document root to /var/www/html (adjust if needed)
+RUN sed -i 's|DocumentRoot "/var/www/html"|DocumentRoot "/var/www/html"|g' /etc/apache2/apache2.conf
+RUN sed -i 's|<Directory "/var/www/html">|<Directory "/var/www/html">|g' /etc/apache2/apache2.conf
+
+# Enable necessary Apache modules (if needed)
+# RUN a2enmod rewrite headers
+
+# Set environment variable to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Expose port 80
+EXPOSE 80
+
+# Start Apache in the foreground
+CMD ["apache2ctl", "-D", "FOREGROUND"]
 
 
-# Expose port 120 for Apache
-EXPOSE 120
-
-
-#RUN  apt-get install apache2 \
- #zip\
- #unzip
-# ADD https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip /var/www/html/
-# WORKDIR /var/www/html/
-# RUN unzip neogym.zip
-# #RUN mv * /var/www/html/
-# RUN ls -ltr  /var/www/html/
-# CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
-# EXPOSE 80
-
-#RUN cp -rvf neogym/* .
-#RUN rm -rf neogym neogym.zip
 
  
