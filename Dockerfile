@@ -24,8 +24,8 @@ RUN
   #  cp -r neogym/* /var/www/html/
 
 
-# Expose port 80 for Apache
-EXPOSE 80
+# Expose port 120 for Apache
+EXPOSE 120
 
 
 #RUN  apt-get install apache2 \
