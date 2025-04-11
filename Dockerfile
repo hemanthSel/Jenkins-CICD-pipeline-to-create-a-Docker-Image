@@ -14,6 +14,7 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html
 
 # Download and unzip the website files
 WORKDIR /var/www/html/
+COPY  neogym-html/* /usr/local/apache2/htdocs/
 RUN
 # docker image build -t $JOB_NAME:v1.$BUILD_ID .
  #wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip 
