@@ -1,74 +1,66 @@
-pipeline {
-    
-    agent any
-    
-    stages {
-        
-        stage("git login"){
-            steps{
-                git 'https://github.com/vikash-kumar01/Jenkins-Docker-Project.git'
-            }
-        }
-         stage("Sending docker file to ansible server"){
-            steps{
-                sshagent(['ansible']) {
-                 sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.32.215'
-                 sh 'scp /var/lib/jenkins/workspace/docker_image/* ubuntu@172.31.32.215:/opt/ansible'
-                }
-            }
-        }
-         stage("docker build"){
-             steps{
-        sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID .'
-        sh 'docker image tag $JOB_NAME:v1.$BUILD_ID vikashashoke/$JOB_NAME:v1.$BUILD_ID'
-        sh 'docker image tag $JOB_NAME:v1.$BUILD_ID vikashashoke/$JOB_NAME:latest'
-             }
-         }
-         stage("push Image: DOCKERHUB"){
-             steps{
-                 withCredentials([string(credentialsId: 'docker_pwd', variable: 'docker_passwd')]) {
-                 sh "docker login -u vikashashoke -p ${docker_passwd}"
-                sh 'docker image push vikashashoke/$JOB_NAME:v1.$BUILD_ID'
-                sh 'docker image push vikashashoke/$JOB_NAME:latest'
-               //A number of images will get stored into our jenkins server so need to remove prev build images
-                //local images,taged images & latest images all delete 
-              sh 'docker image rm $JOB_NAME:v1.$BUILD_ID vikashashoke/$JOB_NAME:v1.$BUILD_ID vikashashoke/$JOB_NAME:latest'
-              }
-             }
-         }
-           stage("Docker Container Deployment"){
-                steps {
-        // def docker_run = 'docker run -p 9000:80 -d --name scripted-pipeline-demo vikashashoke/scripted-pipeline-demo:latest'
-        //def docker_rmv_container = 'docker run -p 9000:80 -d --name scripted-pipeline-demo vikashashoke/scripted-pipeline-demo:latest'
-        //def docker_rmi = 'docker rmi -f vikashashoke/scripted-pipeline-demo'
-        // container deployment need to be done on remote host server DOCKER-Host so ssh-Agent plugin required in jenkins
-       sshagent(['docker_passwd']) {
-    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.32.215 docker rm -f scripted-pipeline-demo"
-    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.32.215 docker rmi -f vikashashoke/scripted-pipeline-demo"
-    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.32.215 docker run -p 9000:80 -d --name scripted-pipeline-demo vikashashoke/scripted-pipeline-demo:latest"
-    //Once sucess try with Docker-Host_IP:Port
-    //Once after Changing the Dockerfile it says port already allocated to prev container whom we didn't yet deleted
-    // therefor ist delete the prev container so that port will be free then try creating a new 
-    //But still it'll not update because latest image is already in server it's not going to dockerHub to pull latest commmit so need to remove images also
-       }
-                }
-             }
-    
-          
-        /* stage("Building Docker Image"){
-            steps{
-                script {
-                     sshagent(['ansible']) {
-                sh 'echo $PWD'
-                sh 'ssh -t -t ubuntu@172.31.32.215 -o StrictHostKeyChecking=no "echo pwd && cd /opt/ansible && echo pwd"'
-               //sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.32.215'
-               //sh 'cd /opt/ansible'
-               sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID .'
-               sh 'docker image tag $JOB_NAME:v1.$BUILD_ID vikashashoke/$JOB_NAME:v1.$BUILD_ID'
-               sh 'docker image tag $JOB_NAME:v1.$BUILD_ID vikashashoke/$JOB_NAME:latest'
-                }
-            }
-            }
-        } */
+CI Pipeline Script:
+###############
+node {
+    stage('git checkout'){
+        cleanWs()
+        echo 'git checkout start'
+        git 'https://github.com/hemanthSel/Jenkins-Docker-Project.git'
+        echo 'git checkout end'
     }
-}
+   
+    stage('Docker login'){
+        script{
+            withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS_PWD', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Execute Docker login command
+                        sh """
+                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                        sudo chmod 777 /var/run/docker.sock
+                        sudo docker image prune -af
+                        sudo docker build -f /var/lib/jenkins/workspace/dockerimg/Dockerfile -t hemanth509/$JOB_NAME:v1.$BUILD_ID .
+                        sudo docker image tag  hemanth509/$JOB_NAME:v1.$BUILD_ID hemanth509/$JOB_NAME:latest
+                        sudo docker run -d -p 500:80 -v /var/www/html:/usr/local/apache2/htdocs/ hemanth509/$JOB_NAME:v1.$BUILD_ID
+                        """
+                        echo "logged into docker with user:${DOCKER_USERNAME}"
+                    }
+        }
+    }
+    stage('push images to dockerhub'){
+        echo 'Push docker image to dockerhub started'
+      withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS_PWD', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+       sh """          
+        sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        sudo docker image push hemanth509/$JOB_NAME:v1.$BUILD_ID
+        sudo docker image push hemanth509/$JOB_NAME:latest
+      """
+        }
+        echo 'Docker images pushed to docker hub'
+    }
+    stage('delete local images'){
+         echo 'Delete docker images'
+        sh 'docker image rm $JOB_NAME:v1.$BUILD_ID hemanth509/$JOB_NAME:v1.$BUILD_ID hemanth509/$JOB_NAME:latest'
+        echo 'Delete docker images complete'
+    }
+    
+        stage('pull image from Docker Hub and run'){
+        sshagent(['ssh_webapp-_server']) {
+       sh "ssh -o StrictHostKeyChecking=no ubuntu@18.233.9.13" // ${docker_run}" 
+       sh 'docker pull hemanth509/docker-groovy:latest'
+       sh 'sudo docker run -d -p 1000:80 hemanth509/docker-groovy:latest'
+       sh 'docker ps -a'
+     }
+    }
+ }
+
+
+
+
+
+
+CD Pipeline Scripts:
+#####################
+
+#!/bin/bash
+sudo chmod 777 /var/run/docker.sock
+sudo docker pull hemanth509/dockerimg:latest
+sudo docker run -d -p 1000:80 hemanth509/dockerimg:latest
+docker ps -a
